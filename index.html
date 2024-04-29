@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Toxicity detector</title>
+
+        <link href="https://fonts.googleapis.com/css2?family=Bellota:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet"> 
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="/css/style.css">
+
+        <script type=text/javascript>
+            $(document).ready(function() {
+                $('#result').text('0.0%');
+                // On input change
+                $('#input').on('input',function(e) {
+                    // Take the value in the input field
+                    var text = $('#input').val();
+                    // Get the predicted val from backend
+                    $.get('/predict?input=' + text, function(data) {
+                        // Show the result in the field
+                        var color = 100 - parseFloat(data)
+                        document.documentElement.style.setProperty('--hue', color.toString());
+                        $('#result').text(data + '%');
+                    });
+                });
+            });
+        </script>
+    </head>
+
+    <body id="color">
+        <div class="wrapper">
+            <div class="content-grid">
+                <textarea 
+                    id="input" 
+                    name="text" 
+                    placeholder="Type here to see the potential effect of what you are writing."
+                    maxlength="192"
+                    rows="4"
+                >
+                </textarea>
+                <div class="result-wrapper">
+                    <p id="result">{{ prediction_text }}</p>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
